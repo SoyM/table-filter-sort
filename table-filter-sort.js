@@ -96,77 +96,154 @@ function getclassifyInfo() {
     console.log(classify_array)
 }
 
-function getSortedInfo() {
+function getSortedInfo(sortby) {
 
     var temp_classify_array = Array()
 
-    //读取原来的顺序
-    if ((new Date(classify_array[1][7])).getTime() < (new Date(classify_array[0][7])).getTime()) {
-        for (var i = 0; i < classify_array.length; i++) {
-            // 获取记录的时间用于对比
-            date = new Date(classify_array[i][7]);
-            var sence_date = date.getTime()
-            if (i == 0) {
-                temp_classify_array[0] = classify_array[0]
-            } else {
+    if (sortby == "sence_id") {
 
-                for (var m = 0; m < temp_classify_array.length; m++) {
 
-                    if ((sence_date > (new Date(temp_classify_array[m][7]).getTime()))) {
+        //读取原来的顺序
+        if (parseInt(classify_array[1][0]) < parseInt(classify_array[0][0])) {
+            for (var i = 0; i < classify_array.length; i++) {
+                // 获取记录的值 用于对比
+                if (i == 0) {
+                    temp_classify_array[0] = classify_array[0]
+                } else {
 
-                        // 进行下次比对
-                        if (m < temp_classify_array.length - 1) {
-                            if ((sence_date > (new Date(temp_classify_array[m + 1][7]).getTime()))) {
-                                continue
+                    for (var m = 0; m < temp_classify_array.length; m++) {
+
+                        if ((parseInt(classify_array[i][0]) > parseInt(temp_classify_array[m][0]))) {
+
+                            // 进行下次比对
+                            if (m < temp_classify_array.length - 1) {
+                                if ((parseInt(classify_array[i][0]) > parseInt(temp_classify_array[m + 1][0]))) {
+                                    continue
+                                }
                             }
+
+                            temp_classify_array.splice(m + 1, 0, classify_array[i])
+                            console.log("a")
+                            break
+
+                        } else {
+                            console.log("b")
+                            temp_classify_array.splice(m, 0, classify_array[i])
+                            break
                         }
+                    }
+                }
 
-                        temp_classify_array.splice(m + 1, 0, classify_array[i])
-                        console.log("a")
-                        break
+            }
 
-                    } else {
-                        console.log("b")
-                        temp_classify_array.splice(m, 0, classify_array[i])
-                        break
+        } else {
+            console.log("1")
+            for (var i = 0; i < classify_array.length; i++) {
+
+                // 首次赋值
+                if (i == 0) {
+                    temp_classify_array[0] = classify_array[0]
+                } else {
+                    // 开始排序
+                    for (var m = 0; m < temp_classify_array.length; m++) {
+
+                        if (parseInt(classify_array[i][0]) > parseInt(temp_classify_array[m][0])) {
+
+                            temp_classify_array.splice(m, 0, classify_array[i])
+                            console.log("a")
+                            break
+                        } else {
+                            // 进行下次比对
+                            if (m < temp_classify_array.length - 1) {
+                                if (parseInt(classify_array[i][0]) < parseInt(temp_classify_array[m + 1][0])) {
+                                    continue
+                                }
+                            }
+                            console.log("b")
+                            temp_classify_array.splice(m + 1, 0, classify_array[i])
+                            break
+                        }
                     }
                 }
             }
+
+
         }
 
-    } else {
 
-        for (var i = 0; i < classify_array.length; i++) {
-            date = new Date(classify_array[i][7]);
-            var sence_date = date.getTime()
-            // 首次赋值
-            if (i == 0) {
-                temp_classify_array[0] = classify_array[0]
-            } else {
-                // 开始排序
-                for (var m = 0; m < temp_classify_array.length; m++) {
+    }
 
-                    if (sence_date > (new Date(temp_classify_array[m][7]).getTime())) {
+    // 日期排序
+    else if (sortby == "sence_date_sort") {
 
-                        temp_classify_array.splice(m, 0, classify_array[i])
-                        console.log("a")
-                        break
-                    } else {
-                        // 进行下次比对
-                        if (m < temp_classify_array.length - 1) {
-                            if ((sence_date < (new Date(temp_classify_array[m + 1][7]).getTime()))) {
-                                continue
+        //读取原来的顺序
+        if ((new Date(classify_array[1][7])).getTime() < (new Date(classify_array[0][7])).getTime()) {
+            for (var i = 0; i < classify_array.length; i++) {
+                // 获取记录的时间用于对比
+                date = new Date(classify_array[i][7]);
+                var sence_date = date.getTime()
+                if (i == 0) {
+                    temp_classify_array[0] = classify_array[0]
+                } else {
+
+                    for (var m = 0; m < temp_classify_array.length; m++) {
+
+                        if ((sence_date > (new Date(temp_classify_array[m][7]).getTime()))) {
+
+                            // 进行下次比对
+                            if (m < temp_classify_array.length - 1) {
+                                if ((sence_date > (new Date(temp_classify_array[m + 1][7]).getTime()))) {
+                                    continue
+                                }
                             }
-                        }
 
-                        temp_classify_array.splice(m + 1, 0, classify_array[i])
-                        break
+                            temp_classify_array.splice(m + 1, 0, classify_array[i])
+                            console.log("a")
+                            break
+
+                        } else {
+                            console.log("b")
+                            temp_classify_array.splice(m, 0, classify_array[i])
+                            break
+                        }
                     }
                 }
             }
+
+        } else {
+
+            for (var i = 0; i < classify_array.length; i++) {
+                date = new Date(classify_array[i][7]);
+                var sence_date = date.getTime()
+                // 首次赋值
+                if (i == 0) {
+                    temp_classify_array[0] = classify_array[0]
+                } else {
+                    // 开始排序
+                    for (var m = 0; m < temp_classify_array.length; m++) {
+
+                        if (sence_date > (new Date(temp_classify_array[m][7]).getTime())) {
+
+                            temp_classify_array.splice(m, 0, classify_array[i])
+                            console.log("a")
+                            break
+                        } else {
+                            // 进行下次比对
+                            if (m < temp_classify_array.length - 1) {
+                                if ((sence_date < (new Date(temp_classify_array[m + 1][7]).getTime()))) {
+                                    continue
+                                }
+                            }
+
+                            temp_classify_array.splice(m + 1, 0, classify_array[i])
+                            break
+                        }
+                    }
+                }
+            }
+
+
         }
-
-
     }
     console.log(temp_classify_array)
     renderForm(temp_classify_array)
