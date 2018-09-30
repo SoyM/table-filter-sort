@@ -49,35 +49,18 @@ for (var m = 1; m < array_senceInfo_title.length; m++) {
         product_model_select.value = array_senceInfo_title[m][i];
         document.getElementById(array_title_id[m - 1]).appendChild(product_model_select)
 
-        // console.log(document.getElementById("product_model" + i))
-
-
-        // var foo_count = 1;
-        // classify_product_model[array_senceInfo_title[1][i]] = Array()
-        // for (var m = 0; m < senceInfo_array.length; m++) {
-        //     if (senceInfo_array[m] == undefined) {
-        //         continue
-        //     }
-        //     if (senceInfo_array[m][1] == array_senceInfo_title[1][i]) {
-
-        //         classify_product_model[array_senceInfo_title[1][i]].push(senceInfo_array[m])
-        //         foo_count++;
-        //     }
-        // }
     }
 }
-
-
 // console.log(classify_product_model)
 
+var classify_array = senceInfo_array
 
 function getclassifyInfo() {
-    var classify_array = Array()
+    classify_array = Array()
     var classify_count = 0
     for (var i = 0; i < array_title_id.length; i++) {
 
-
-        if (document.getElementById(array_title_id[i]).value != '') {
+        if (document.getElementById(array_title_id[i]).value != 'all') {
             // console.log(document.getElementById(array_title_id[i]).value)
             if (classify_count == 0) {
 
@@ -104,27 +87,108 @@ function getclassifyInfo() {
                 classify_array = temp_classify_array
             }
         }
-
-        console.log(classify_array)
     }
+    // reset all select
+    if (classify_count == 0) {
+        classify_array = senceInfo_array;
+    }
+    renderForm(classify_array)
+    console.log(classify_array)
+}
+
+function getSortedInfo() {
+
+    var temp_classify_array = Array()
+
+    //读取原来的顺序
+    if ((new Date(classify_array[1][7])).getTime() < (new Date(classify_array[0][7])).getTime()) {
+        for (var i = 0; i < classify_array.length; i++) {
+            // 获取记录的时间用于对比
+            date = new Date(classify_array[i][7]);
+            var sence_date = date.getTime()
+            if (i == 0) {
+                temp_classify_array[0] = classify_array[0]
+            } else {
+
+                for (var m = 0; m < temp_classify_array.length; m++) {
+
+                    if ((sence_date > (new Date(temp_classify_array[m][7]).getTime()))) {
+
+                        // 进行下次比对
+                        if (m < temp_classify_array.length - 1) {
+                            if ((sence_date > (new Date(temp_classify_array[m + 1][7]).getTime()))) {
+                                continue
+                            }
+                        }
+
+                        temp_classify_array.splice(m + 1, 0, classify_array[i])
+                        console.log("a")
+                        break
+
+                    } else {
+                        console.log("b")
+                        temp_classify_array.splice(m, 0, classify_array[i])
+                        break
+                    }
+                }
+            }
+        }
+
+    } else {
+
+        for (var i = 0; i < classify_array.length; i++) {
+            date = new Date(classify_array[i][7]);
+            var sence_date = date.getTime()
+            // 首次赋值
+            if (i == 0) {
+                temp_classify_array[0] = classify_array[0]
+            } else {
+                // 开始排序
+                for (var m = 0; m < temp_classify_array.length; m++) {
+
+                    if (sence_date > (new Date(temp_classify_array[m][7]).getTime())) {
+
+                        temp_classify_array.splice(m, 0, classify_array[i])
+                        console.log("a")
+                        break
+                    } else {
+                        // 进行下次比对
+                        if (m < temp_classify_array.length - 1) {
+                            if ((sence_date < (new Date(temp_classify_array[m + 1][7]).getTime()))) {
+                                continue
+                            }
+                        }
+
+                        temp_classify_array.splice(m + 1, 0, classify_array[i])
+                        break
+                    }
+                }
+            }
+        }
 
 
-    var tb = document.getElementById("senceInfo");
+    }
+    console.log(temp_classify_array)
+    renderForm(temp_classify_array)
+}
 
-    for (var i = 0; i < classify_array.length; i++) {
+
+function renderForm(temp_classify_array) {
+    for (var i = 0; i < temp_classify_array.length; i++) {
         // console.log(i)
         // var cells = tb.rows[i + 1].cells;
 
         for (var j = 0; j < tb.rows[i + 1].cells.length; j++) {
-            tb.rows[i + 1].cells[j].innerHTML = classify_array[i][j];
+            tb.rows[i + 1].cells[j].innerHTML = temp_classify_array[i][j];
+
         }
     }
 
-    for (var i = classify_array.length; i < tb.rows.length - 1; i++) {
+    for (var i = temp_classify_array.length; i < tb.rows.length - 1; i++) {
         var cells = tb.rows[i + 1].cells;
         for (var j = 0; j < cells.length; j++) {
             cells[j].innerHTML = '';
         }
     }
+    classify_array = temp_classify_array
 }
-
